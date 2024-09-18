@@ -36,14 +36,37 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Optional<Project> update(Long id, Project project) throws Exception {
-
-        if (!projectRepository.existsById(id)) {
+        Optional<Project> existingProjectOpt = projectRepository.findById(id);
+        if (existingProjectOpt.isEmpty()) {
             throw new Exception("Projeto não encontrado, tente outro ID.");
         }
-        project.setId(id);
-        projectRepository.save(project);
+        Project existingProject = existingProjectOpt.get();
 
-        return projectRepository.findById(id);
+        if (project.getName() != null) {
+            existingProject.setName(project.getName());
+        }
+        if (project.getDescription() != null) {
+            existingProject.setDescription(project.getDescription());
+        }
+        if (project.getActive() != null) {
+            existingProject.setActive(project.getActive());
+        }
+        if (project.getTotalCost() != null) {
+            existingProject.setTotalCost(project.getTotalCost());
+        }
+        if (project.getEstimatedHours() != null) {
+            existingProject.setEstimatedHours(project.getEstimatedHours());
+        }
+        if (project.getBudget() != null) {
+            existingProject.setBudget(project.getBudget());
+        }
+        if (project.getAddress() != null) {
+            existingProject.setAddress(project.getAddress());
+        }
+
+        projectRepository.save(existingProject);
+
+        return Optional.of(existingProject);
     }
 
     @Override
